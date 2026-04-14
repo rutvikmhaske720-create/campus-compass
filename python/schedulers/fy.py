@@ -499,8 +499,135 @@ class OptimizedTimetableScheduler:
                             self.session_intervals[ssid]
                         ])
 
+        # SOFT CONSTRAINTS: faculty spread + batch compactness
+        print("  Adding C6: Faculty spread across week (soft)...")
+        print("  Adding C7: Batch schedule compactness / no gaps (soft)...")
+        self._add_soft_objective()
+
         print(f"  ✓ Model created in {time.time() - start_time:.2f}s")
         return True
+
+    def _add_soft_objective(self):
+        """
+        Soft constraints via objective minimization:
+          - Faculty spread: penalise faculty who have no session on some day
+            (target = min(num_sessions, num_days) distinct active days).
+          - Batch compactness: penalise gap slots between a batch's first and
+            last session on any given day (students should not sit idle between
+            lectures). Lunch contributes +1 to span on lunch-crossing days —
+            accepted as a small systematic offset.
+        """
+        num_days = len(self.days)
+        slots_per_day = self.time_slots_per_day
+
+        # Per-session day / slot derived vars via Div/Mod on the global start.
+        day_of = {}
+        slot_of = {}
+        for session in self.sessions:
+            sid = session['id']
+            start_var = self.session_starts[sid]
+            day_v = self.model.NewIntVar(0, num_days - 1, f"day_s{sid}")
+            slot_v = self.model.NewIntVar(0, slots_per_day - 1, f"slot_s{sid}")
+            self.model.AddDivisionEquality(day_v, start_var, slots_per_day)
+            self.model.AddModuloEquality(slot_v, start_var, slots_per_day)
+            day_of[sid] = day_v
+            slot_of[sid] = slot_v
+
+        # session_on_day[sid][d] = True iff session sid is scheduled on day d
+        session_on_day = {}
+        for session in self.sessions:
+            sid = session['id']
+            session_on_day[sid] = {}
+            for d in range(num_days):
+                b = self.model.NewBoolVar(f"sod_s{sid}_d{d}")
+                self.model.Add(day_of[sid] == d).OnlyEnforceIf(b)
+                self.model.Add(day_of[sid] != d).OnlyEnforceIf(b.Not())
+                session_on_day[sid][d] = b
+
+        # --- Faculty spread ---
+        faculty_idle_penalty = []
+        for fac_idx, (faculty, sids) in enumerate(self.faculty_sessions.items()):
+            if not sids:
+                continue
+            n = len(sids)
+            day_active = []
+            for d in range(num_days):
+                a = self.model.NewBoolVar(f"fac{fac_idx}_d{d}")
+                # a == OR over sids of session_on_day[sid][d]
+                self.model.AddMaxEquality(a, [session_on_day[sid][d] for sid in sids])
+                day_active.append(a)
+
+            target = min(n, num_days)
+            active_sum = self.model.NewIntVar(0, num_days, f"fac{fac_idx}_active")
+            self.model.Add(active_sum == sum(day_active))
+
+            pen = self.model.NewIntVar(0, num_days, f"fac{fac_idx}_pen")
+            self.model.Add(pen == target - active_sum)
+            faculty_idle_penalty.append(pen)
+
+        # --- Batch compactness (no gaps between a batch's lectures on a day) ---
+        batch_gap_terms = []
+        BIG = slots_per_day + 5
+        NEG = -5
+        for b_idx, (batch, sids) in enumerate(self.batch_sessions.items()):
+            if not sids:
+                continue
+            for d in range(num_days):
+                eff_starts = []
+                eff_ends = []
+                dur_contribs = []
+                on_bools = []
+                for sid in sids:
+                    dur = self.sessions[sid]['duration']
+                    on = session_on_day[sid][d]
+                    on_bools.append(on)
+
+                    es = self.model.NewIntVar(0, BIG, f"es_b{b_idx}_d{d}_s{sid}")
+                    self.model.Add(es == slot_of[sid]).OnlyEnforceIf(on)
+                    self.model.Add(es == BIG).OnlyEnforceIf(on.Not())
+                    eff_starts.append(es)
+
+                    ee = self.model.NewIntVar(NEG, BIG, f"ee_b{b_idx}_d{d}_s{sid}")
+                    self.model.Add(ee == slot_of[sid] + (dur - 1)).OnlyEnforceIf(on)
+                    self.model.Add(ee == NEG).OnlyEnforceIf(on.Not())
+                    eff_ends.append(ee)
+
+                    c = self.model.NewIntVar(0, dur, f"c_b{b_idx}_d{d}_s{sid}")
+                    self.model.Add(c == dur).OnlyEnforceIf(on)
+                    self.model.Add(c == 0).OnlyEnforceIf(on.Not())
+                    dur_contribs.append(c)
+
+                any_on = self.model.NewBoolVar(f"any_b{b_idx}_d{d}")
+                self.model.AddMaxEquality(any_on, on_bools)
+
+                min_start = self.model.NewIntVar(0, BIG, f"mn_b{b_idx}_d{d}")
+                max_end = self.model.NewIntVar(NEG, BIG, f"mx_b{b_idx}_d{d}")
+                self.model.AddMinEquality(min_start, eff_starts)
+                self.model.AddMaxEquality(max_end, eff_ends)
+
+                total_dur = self.model.NewIntVar(0, slots_per_day + 5, f"td_b{b_idx}_d{d}")
+                self.model.Add(total_dur == sum(dur_contribs))
+
+                # gap = span - total_dur when any session on day, else 0
+                # span = max_end - min_start + 1
+                gap = self.model.NewIntVar(0, slots_per_day, f"gap_b{b_idx}_d{d}")
+                self.model.Add(gap == (max_end - min_start + 1) - total_dur).OnlyEnforceIf(any_on)
+                self.model.Add(gap == 0).OnlyEnforceIf(any_on.Not())
+                batch_gap_terms.append(gap)
+
+        # --- Objective ---
+        # Heavy weight on faculty spread since user wants "no days off for faculty".
+        FAC_WEIGHT = 20
+        GAP_WEIGHT = 5
+        self.model.Minimize(
+            FAC_WEIGHT * sum(faculty_idle_penalty) +
+            GAP_WEIGHT * sum(batch_gap_terms)
+        )
+
+        print(f"    ✓ Faculty spread terms: {len(faculty_idle_penalty)} "
+              f"(weight={FAC_WEIGHT})")
+        print(f"    ✓ Batch gap terms: {len(batch_gap_terms)} "
+              f"(weight={GAP_WEIGHT})")
 
     def solve(self, time_limit=300):
         """Solve with optimized parameters"""
