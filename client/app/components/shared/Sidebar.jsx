@@ -3,7 +3,7 @@
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
 import { signOut } from 'next-auth/react'
 
-export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen, tabs }) {
+export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen, tabs, portalLabel }) {
   const handleSignOut = async () => {
     await signOut({ callbackUrl: '/auth/signin' })
   }
@@ -35,7 +35,7 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
               </div>
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Admin Portal</h2>
+              <h2 className="text-lg font-bold text-gray-900">{portalLabel || 'CampusCompass'}</h2>
               <p className="text-xs text-gray-600 font-medium">Management System</p>
             </div>
           </div>

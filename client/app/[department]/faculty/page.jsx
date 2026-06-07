@@ -42,13 +42,13 @@ export default function FacultyPage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin')
-    } else if (status === 'authenticated' && session.user.role !== 'coordinator') {
+    } else if (status === 'authenticated' && session.user.role !== 'admin') {
       router.push('/')
     }
   }, [status, session, router])
 
   useEffect(() => {
-    if (session?.user.role === 'coordinator') {
+    if (session?.user.role === 'admin') {
       fetchDepartmentData()
     }
   }, [session])

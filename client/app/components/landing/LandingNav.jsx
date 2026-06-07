@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
-export default function LandingNav({ onSetupClick }) {
+export default function LandingNav() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -19,7 +19,7 @@ export default function LandingNav({ onSetupClick }) {
     const element = document.getElementById(id)
     if (element) {
       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
-      const offsetPosition = elementPosition - 68 // 64px navbar height + 30px spacing
+      const offsetPosition = elementPosition - 68
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
@@ -47,15 +47,10 @@ export default function LandingNav({ onSetupClick }) {
               <div className="absolute inset-0 bg-gradient-to-br from-teal-400 to-emerald-400 rounded-lg blur-sm opacity-50 group-hover:opacity-75 transition-opacity"></div>
               <div className="relative p-2 bg-gradient-to-br from-teal-600 to-emerald-600 rounded-lg shadow-md">
                 <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  {/* Bow */}
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M 4 4 Q 2 12 4 20" />
-                  {/* Bowstring */}
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M 4 4 L 4 20" opacity="0.6" />
-                  {/* Arrow */}
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M 4 12 L 20 12" />
-                  {/* Arrow tip */}
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M 16 8 L 20 12 L 16 16" />
-                  {/* Arrow feathers */}
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M 6 10 L 4 12 L 6 14" opacity="0.7" />
                 </svg>
               </div>
@@ -81,21 +76,15 @@ export default function LandingNav({ onSetupClick }) {
             ))}
           </div>
 
-          {/* CTA Buttons */}
-          <div className="hidden md:flex items-center space-x-3">
+          {/* Sign In */}
+          <div className="hidden md:flex items-center">
             <a
               href="/auth/signin"
-              className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-teal-600 transition-colors"
-            >
-              Sign In
-            </a>
-            <button
-              onClick={onSetupClick}
               className="group relative px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-teal-600 to-emerald-600 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/30"
             >
-              <span className="relative z-10">Get Started</span>
+              <span className="relative z-10">Sign In</span>
               <div className="absolute inset-0 bg-gradient-to-r from-teal-700 to-emerald-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </button>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -125,19 +114,13 @@ export default function LandingNav({ onSetupClick }) {
                 {link.label}
               </button>
             ))}
-            <div className="pt-3 space-y-2">
+            <div className="pt-3">
               <a
                 href="/auth/signin"
-                className="block w-full text-center px-4 py-3 text-sm font-medium text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                className="block w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-teal-600 to-emerald-600 rounded-lg hover:shadow-lg transition-all text-center"
               >
                 Sign In
               </a>
-              <button
-                onClick={onSetupClick}
-                className="block w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-teal-600 to-emerald-600 rounded-lg hover:shadow-lg transition-all"
-              >
-                Get Started
-              </button>
             </div>
           </div>
         </div>

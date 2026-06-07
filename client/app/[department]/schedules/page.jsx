@@ -21,13 +21,13 @@ export default function SchedulesPage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin')
-    } else if (status === 'authenticated' && session.user.role !== 'coordinator') {
+    } else if (status === 'authenticated' && session.user.role !== 'admin') {
       router.push('/')
     }
   }, [status, session, router])
 
   useEffect(() => {
-    if (session?.user.role === 'coordinator') {
+    if (session?.user.role === 'admin') {
       fetchDepartmentData()
     }
   }, [session])

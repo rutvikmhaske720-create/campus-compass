@@ -1,38 +1,37 @@
 'use client'
 
 import { CheckCircleIcon } from '@heroicons/react/24/solid'
+import { isFYDepartment } from '@/lib/departmentUtils'
 
 export default function ConfigTimeline({ currentStep, onStepClick, isStandardDept, departmentName }) {
-  // FY department: Only online config + faculty availability
-  const deptUpper = (departmentName || '').toUpperCase().replace(/\./g, '').replace(/\s+/g, '').replace(/-/g, '').replace(/_/g, '')
-  const isSimpleDept = deptUpper === 'FY'
+  // FY department: only online config + faculty availability + review.
+  const isSimpleDept = isFYDepartment(departmentName)
 
-  const baseSteps = [
-    { id: 1, label: 'Online Config' },
-    { id: 2, label: 'Faculty' }
-  ]
+  // Always use the same step IDs across FY and standard flows so
+  // `currentStep` values from the parent match. FY simply omits 3 and 4.
+  const steps = isSimpleDept || !isStandardDept
+    ? [
+        { id: 1, label: 'Online Config' },
+        { id: 2, label: 'Faculty' },
+        { id: 5, label: 'Review' },
+      ]
+    : [
+        { id: 1, label: 'Online Config' },
+        { id: 2, label: 'Faculty' },
+        { id: 3, label: 'TY PEC' },
+        { id: 4, label: 'BTech PEC' },
+        { id: 5, label: 'Review' },
+      ]
 
-  let pecSteps
-  if (isStandardDept && !isSimpleDept) {
-    pecSteps = [
-      { id: 3, label: 'TY PEC' },
-      { id: 4, label: 'BTech PEC' },
-      { id: 5, label: 'Review' }
-    ]
-  } else {
-    pecSteps = [
-      { id: 3, label: 'Review' }
-    ]
-  }
-
-  const steps = [...baseSteps, ...pecSteps]
+  const currentIndex = steps.findIndex(s => s.id === currentStep)
+  const displayStep = currentIndex >= 0 ? currentIndex + 1 : 1
 
   return (
     <div className="bg-white rounded-xl border border-secondary p-6 mb-4">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-base font-bold text-primary">Configuration Workflow</h3>
         <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-semibold">
-          Step {currentStep} of {steps.length}
+          Step {displayStep} of {steps.length}
         </span>
       </div>
       

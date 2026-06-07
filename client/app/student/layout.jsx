@@ -2,6 +2,6 @@
 
 import { SessionProvider } from 'next-auth/react'
 
-export default function AdminLayout({ children }) {
+export default function StudentLayout({ children }) {
   return <SessionProvider>{children}</SessionProvider>
 }

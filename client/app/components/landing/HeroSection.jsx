@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { BuildingOfficeIcon, UserGroupIcon, ArrowRightIcon, CalendarDaysIcon, ChartBarIcon, ClockIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
 
-export default function HeroSection({ onSetupClick }) {
+export default function HeroSection() {
   const [hoveredCell, setHoveredCell] = useState(null)
   return (
     <div className="relative overflow-hidden bg-transparent">

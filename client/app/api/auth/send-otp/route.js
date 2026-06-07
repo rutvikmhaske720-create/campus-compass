@@ -10,12 +10,14 @@ export async function POST(request) {
     const db = client.db()
 
     let isValid = false
-    const universityWithCoordinator = await db.collection('universities').findOne({
+
+    // Check admin (department coordinator credentials in universities collection)
+    const universityWithAdmin = await db.collection('universities').findOne({
       'departments.coordinator.email': email
     })
 
-    if (universityWithCoordinator) {
-      const department = universityWithCoordinator.departments.find(
+    if (universityWithAdmin) {
+      const department = universityWithAdmin.departments.find(
         dept => dept.coordinator.email === email
       )
       if (department && await bcrypt.compare(password, department.coordinator.passwordHash)) {
@@ -23,11 +25,18 @@ export async function POST(request) {
       }
     }
 
+    // Check teacher
     if (!isValid) {
-      const university = await db.collection('universities').findOne({
-        'admin.email': email
-      })
-      if (university && await bcrypt.compare(password, university.admin.passwordHash)) {
+      const teacher = await db.collection('teachers').findOne({ email })
+      if (teacher && await bcrypt.compare(password, teacher.passwordHash)) {
+        isValid = true
+      }
+    }
+
+    // Check student
+    if (!isValid) {
+      const student = await db.collection('students').findOne({ email })
+      if (student && await bcrypt.compare(password, student.passwordHash)) {
         isValid = true
       }
     }
@@ -57,10 +66,10 @@ export async function POST(request) {
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: email,
-        subject: 'Your Login OTP - University Portal',
+        subject: 'Your Login OTP - CampusCompass',
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #4F46E5;">Login Verification</h2>
+            <h2 style="color: #0d9488;">CampusCompass Login Verification</h2>
             <p>Your OTP for login is:</p>
             <div style="background: #F3F4F6; padding: 15px; border-radius: 8px; text-align: center; margin: 20px 0;">
               <h1 style="color: #1F2937; letter-spacing: 8px; margin: 0;">${otp}</h1>

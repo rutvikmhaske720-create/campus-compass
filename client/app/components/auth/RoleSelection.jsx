@@ -1,36 +1,49 @@
 'use client'
 
-import { ShieldCheckIcon, AcademicCapIcon, BuildingOfficeIcon, CogIcon, UserGroupIcon, SparklesIcon, HomeIcon } from '@heroicons/react/24/outline'
+import { AcademicCapIcon, UserGroupIcon, ShieldCheckIcon, HomeIcon, BookOpenIcon, CogIcon, CalendarDaysIcon, ClipboardDocumentListIcon, ChartBarIcon } from '@heroicons/react/24/outline'
 import RoleCard from './RoleCard'
 import Link from 'next/link'
 
 export default function RoleSelection({ onRoleSelect }) {
   const roles = [
     {
-      role: 'Institute Coordinator',
-      icon: ShieldCheckIcon,
-      title: 'Institute Coordinator',
-      description: 'Complete oversight of all departments with automated scheduling, analytics, and administrative controls.',
+      role: 'Student',
+      icon: AcademicCapIcon,
+      title: 'Student',
+      description: 'Access your timetable, track course progress, and view academic analytics.',
       features: [
-        { icon: BuildingOfficeIcon, text: 'Institute-wide oversight' },
-        { icon: CogIcon, text: 'System configuration' },
-        { icon: UserGroupIcon, text: 'User management' }
+        { icon: CalendarDaysIcon, text: 'View timetable' },
+        { icon: BookOpenIcon, text: 'Course progress' },
+        { icon: ChartBarIcon, text: 'Academic analytics' }
       ],
-      gradient: 'indigo',
-      value: 'admin'
+      gradient: 'blue',
+      value: 'student'
     },
     {
-      role: 'Department Coordinator',
-      icon: AcademicCapIcon,
-      title: 'Department Coordinator',
-      description: 'Department-specific access for managing schedules, faculty, and academic resources within your department.',
+      role: 'Teacher',
+      icon: UserGroupIcon,
+      title: 'Teacher',
+      description: 'Manage your schedule, track lectures, and view student analytics.',
       features: [
-        { icon: AcademicCapIcon, text: 'Department management' },
-        { icon: CogIcon, text: 'Schedule optimization' },
-        { icon: UserGroupIcon, text: 'Faculty coordination' }
+        { icon: CalendarDaysIcon, text: 'Teaching schedule' },
+        { icon: ClipboardDocumentListIcon, text: 'Lecture tracking' },
+        { icon: ChartBarIcon, text: 'Student analytics' }
       ],
       gradient: 'purple',
-      value: 'coordinator'
+      value: 'teacher'
+    },
+    {
+      role: 'Admin',
+      icon: ShieldCheckIcon,
+      title: 'Admin',
+      description: 'Department management, schedule generation, faculty coordination, and resource optimization.',
+      features: [
+        { icon: CogIcon, text: 'Schedule generation' },
+        { icon: UserGroupIcon, text: 'Faculty management' },
+        { icon: ChartBarIcon, text: 'Department analytics' }
+      ],
+      gradient: 'teal',
+      value: 'admin'
     }
   ]
 
@@ -38,7 +51,7 @@ export default function RoleSelection({ onRoleSelect }) {
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-emerald-50 to-cyan-50">
       <div className="absolute inset-0 bg-gradient-to-r from-teal-100/50 to-cyan-100/50"></div>
       <div className="relative flex items-center justify-center min-h-screen py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl w-full">
+        <div className="max-w-5xl w-full">
           <Link
             href="/"
             className="absolute top-8 left-8 flex items-center text-gray-600 hover:text-gray-800 transition-colors"
@@ -47,13 +60,13 @@ export default function RoleSelection({ onRoleSelect }) {
             <span className="text-sm sm:text-base">Home</span>
           </Link>
           <div className="text-center mb-4 sm:mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Welcome to CampusCompass</h1>
             <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto px-4">
-              Access your automated timetable scheduling dashboard
+              Select your role to access your dashboard
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
             {roles.map((role) => (
               <RoleCard
                 key={role.value}
@@ -65,7 +78,7 @@ export default function RoleSelection({ onRoleSelect }) {
 
           <div className="text-center mt-4 sm:mt-6">
             <p className="text-gray-600 text-xs sm:text-sm px-4">
-              Powered by Team Eklavya • Secure AI-Driven University Timetable Management
+              Powered by Team Eklavya_01 • CampusCompass
             </p>
           </div>
         </div>

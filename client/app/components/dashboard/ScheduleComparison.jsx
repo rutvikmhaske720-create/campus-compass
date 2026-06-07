@@ -43,6 +43,7 @@ function analyzeSchedule(scheduleData) {
 export default function ScheduleComparison({ schedulesData = [], isOpen, onClose, onSelect, rawResults }) {
   const [selectedSchedule, setSelectedSchedule] = useState(null)
   const [showAnalytics, setShowAnalytics] = useState(null)
+  const [deployingId, setDeployingId] = useState(null)
   
   console.log('ScheduleComparison render:', { isOpen, schedulesDataLength: schedulesData.length, rawResults })
 
@@ -279,16 +280,39 @@ export default function ScheduleComparison({ schedulesData = [], isOpen, onClose
                 {/* Actions */}
                 <div className="bg-slate-50 p-3 border-t border-slate-200 flex gap-2">
                   <button
-                    onClick={() => {
-                      if (onSelect) {
-                        onSelect(schedule.id)
+                    disabled={deployingId !== null}
+                    onClick={async () => {
+                      if (!onSelect) {
+                        onClose()
+                        return
                       }
-                      onClose()
+                      setDeployingId(schedule.id)
+                      try {
+                        await onSelect(schedule.id)
+                        onClose()
+                      } catch (err) {
+                        // Error already toasted in parent; keep modal open so user can retry.
+                        console.error('Deploy failed:', err)
+                      } finally {
+                        setDeployingId(null)
+                      }
                     }}
-                    className="flex-1 py-2 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:shadow-lg"
+                    className="flex-1 py-2 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    <CheckCircleIcon className="h-4 w-4" />
-                    Select & Deploy
+                    {deployingId === schedule.id ? (
+                      <>
+                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                        </svg>
+                        Deploying...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircleIcon className="h-4 w-4" />
+                        Select & Deploy
+                      </>
+                    )}
                   </button>
                   <button
                     onClick={() => setShowAnalytics(schedule.id)}

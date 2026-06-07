@@ -3,53 +3,22 @@
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { ShieldCheckIcon, AcademicCapIcon } from '@heroicons/react/24/outline'
+import { ShieldCheckIcon, AcademicCapIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import RoleSelection from '../../components/auth/RoleSelection'
 import LoginForm from '../../components/auth/LoginForm'
 
 export default function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [otp, setOtp] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [selectedRole, setSelectedRole] = useState(null)
-  const [otpSent, setOtpSent] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
-
-    if (!otpSent) {
-      const res = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
-
-      if (res.ok) {
-        setOtpSent(true)
-        setError('')
-      } else {
-        setError('Invalid credentials')
-      }
-      setLoading(false)
-      return
-    }
-
-    const verifyRes = await fetch('/api/auth/verify-otp', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, otp })
-    })
-
-    if (!verifyRes.ok) {
-      setError('Invalid or expired OTP')
-      setLoading(false)
-      return
-    }
 
     const result = await signIn('credentials', {
       email,
@@ -58,29 +27,33 @@ export default function SignIn() {
     })
 
     if (result.error) {
-      setError('Authentication failed')
+      setError('Invalid email or password')
       setLoading(false)
-    } else {
-      const userResponse = await fetch('/api/auth/session')
-      const session = await userResponse.json()
-      
-      if (!session?.user?.role) {
-        setError('Session error. Please try again.')
-        setLoading(false)
-        return
-      }
-      
-      if (session.user.role !== selectedRole) {
-        setError(`Invalid credentials for ${selectedRole === 'admin' ? 'Institute Coordinator' : 'Department Coordinator'}. Please select the correct role.`)
-        setLoading(false)
-        return
-      }
-      
-      if (session.user.role === 'admin') {
-        router.push('/admin/dashboard')
-      } else if (session.user.role === 'coordinator') {
-        router.push(`/${session.user.department}/dashboard`)
-      }
+      return
+    }
+
+    const userResponse = await fetch('/api/auth/session')
+    const session = await userResponse.json()
+
+    if (!session?.user?.role) {
+      setError('Session error. Please try again.')
+      setLoading(false)
+      return
+    }
+
+    if (session.user.role !== selectedRole) {
+      const roleLabels = { student: 'Student', teacher: 'Teacher', admin: 'Admin' }
+      setError(`Invalid credentials for ${roleLabels[selectedRole] || selectedRole}. Please select the correct role.`)
+      setLoading(false)
+      return
+    }
+
+    if (session.user.role === 'admin') {
+      router.push(`/${session.user.department}/dashboard`)
+    } else if (session.user.role === 'teacher') {
+      router.push('/teacher/dashboard')
+    } else if (session.user.role === 'student') {
+      router.push('/student/dashboard')
     }
   }
 
@@ -92,16 +65,10 @@ export default function SignIn() {
   }
 
   const handleBack = () => {
-    if (otpSent) {
-      setOtpSent(false)
-      setOtp('')
-      setError('')
-    } else {
-      setSelectedRole(null)
-      setEmail('')
-      setPassword('')
-      setError('')
-    }
+    setSelectedRole(null)
+    setEmail('')
+    setPassword('')
+    setError('')
   }
 
   if (!selectedRole) {
@@ -109,25 +76,35 @@ export default function SignIn() {
   }
 
   const roleConfigs = {
-    admin: {
-      title: 'Institute Coordinator Portal',
-      subtitle: 'Institute Management Dashboard',
-      icon: ShieldCheckIcon,
-      gradient: 'from-[#52796f] to-emerald-600',
-      description: 'Complete oversight of all departments, analytics, and administrative controls.',
-      emailPlaceholder: 'admin@university.edu',
-      helpTitle: 'Institute Coordinator Access',
-      helpText: 'Use the admin email and password you created during university setup.'
-    },
-    coordinator: {
-      title: 'Department Coordinator Portal',
-      subtitle: 'Department Management Dashboard',
+    student: {
+      title: 'Student Portal',
+      subtitle: 'Student Dashboard',
       icon: AcademicCapIcon,
-      gradient: 'from-[#778da9] to-blue-600',
-      description: 'AI-powered scheduling, faculty coordination, and resource optimization for your department.',
-      emailPlaceholder: 'coordinator@department.edu',
-      helpTitle: 'Coordinator Access',
-      helpText: 'Use the auto-generated credentials provided for your department.'
+      gradient: 'from-blue-600 to-blue-700',
+      description: 'Access your timetable, course progress, and academic analytics.',
+      emailPlaceholder: 'student@mitaoe.ac.in',
+      helpTitle: 'Student Access',
+      helpText: 'Use your registered student email and password.'
+    },
+    teacher: {
+      title: 'Teacher Portal',
+      subtitle: 'Teacher Dashboard',
+      icon: UserGroupIcon,
+      gradient: 'from-purple-600 to-purple-700',
+      description: 'View your teaching schedule, track lectures, and access student analytics.',
+      emailPlaceholder: 'faculty@mitaoe.ac.in',
+      helpTitle: 'Teacher Access',
+      helpText: 'Use your registered faculty email and password.'
+    },
+    admin: {
+      title: 'Admin Portal',
+      subtitle: 'Department Management Dashboard',
+      icon: ShieldCheckIcon,
+      gradient: 'from-teal-600 to-teal-700',
+      description: 'Schedule generation, faculty coordination, and resource optimization for your department.',
+      emailPlaceholder: 'admin@department.edu',
+      helpTitle: 'Admin Access',
+      helpText: 'Use the credentials provided for your department.'
     }
   }
 
@@ -139,9 +116,6 @@ export default function SignIn() {
         setEmail={setEmail}
         password={password}
         setPassword={setPassword}
-        otp={otp}
-        setOtp={setOtp}
-        otpSent={otpSent}
         error={error}
         loading={loading}
         onSubmit={handleSubmit}

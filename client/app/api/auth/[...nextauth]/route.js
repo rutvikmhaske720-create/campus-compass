@@ -16,46 +16,64 @@ export const authOptions = {
           if (!credentials?.email || !credentials?.password) {
             return null
           }
-        
-        const client = await clientPromise
-        const db = client.db()
-        
-        // Check department coordinator first
-        const universityWithCoordinator = await db.collection('universities').findOne({
-          'departments.coordinator.email': credentials.email
-        })
-        
-        if (universityWithCoordinator) {
-          const department = universityWithCoordinator.departments.find(
-            dept => dept.coordinator.email === credentials.email
-          )
-          
-          if (department && await bcrypt.compare(credentials.password, department.coordinator.passwordHash)) {
-            return {
-              id: universityWithCoordinator._id.toString(),
-              email: credentials.email,
-              role: 'coordinator',
-              department: department.name,
-              university: universityWithCoordinator.name
+
+          const client = await clientPromise
+          const db = client.db()
+
+          // 1. Check admin (previously "department coordinator")
+          const universityWithAdmin = await db.collection('universities').findOne({
+            'departments.coordinator.email': credentials.email
+          })
+
+          if (universityWithAdmin) {
+            const department = universityWithAdmin.departments.find(
+              dept => dept.coordinator.email === credentials.email
+            )
+
+            if (department && await bcrypt.compare(credentials.password, department.coordinator.passwordHash)) {
+              return {
+                id: universityWithAdmin._id.toString(),
+                email: credentials.email,
+                role: 'admin',
+                department: department.name,
+                university: universityWithAdmin.name
+              }
             }
           }
-        }
-        
-        // Check university admin
-        const university = await db.collection('universities').findOne({
-          'admin.email': credentials.email
-        })
-        
-        if (university && await bcrypt.compare(credentials.password, university.admin.passwordHash)) {
-          return {
-            id: university._id.toString(),
-            email: credentials.email,
-            role: 'admin',
-            university: university.name
+
+          // 2. Check teacher
+          const teacher = await db.collection('teachers').findOne({
+            email: credentials.email
+          })
+
+          if (teacher && await bcrypt.compare(credentials.password, teacher.passwordHash)) {
+            return {
+              id: teacher._id.toString(),
+              email: credentials.email,
+              role: 'teacher',
+              name: teacher.name,
+              department: teacher.department,
+              university: teacher.university
+            }
           }
-        }
-        
-        return null
+
+          // 3. Check student
+          const student = await db.collection('students').findOne({
+            email: credentials.email
+          })
+
+          if (student && await bcrypt.compare(credentials.password, student.passwordHash)) {
+            return {
+              id: student._id.toString(),
+              email: credentials.email,
+              role: 'student',
+              name: student.name,
+              department: student.department,
+              university: student.university
+            }
+          }
+
+          return null
         } catch (error) {
           console.error('NextAuth authorize error:', error)
           return null
@@ -67,6 +85,7 @@ export const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role
+        token.name = user.name
         token.department = user.department
         token.university = user.university
       }
@@ -76,6 +95,7 @@ export const authOptions = {
       if (!session) return session
       if (session.user) {
         session.user.role = token?.role || null
+        session.user.name = token?.name || null
         session.user.department = token?.department || null
         session.user.university = token?.university || null
       }

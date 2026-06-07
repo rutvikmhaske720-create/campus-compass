@@ -4,19 +4,16 @@ import { useState } from 'react'
 import { EnvelopeIcon, KeyIcon, ArrowRightIcon, ChevronLeftIcon, HomeIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 
-export default function LoginForm({ 
-  email, 
-  setEmail, 
-  password, 
+export default function LoginForm({
+  email,
+  setEmail,
+  password,
   setPassword,
-  otp,
-  setOtp,
-  otpSent,
-  error, 
-  loading, 
-  onSubmit, 
-  onBack, 
-  config 
+  error,
+  loading,
+  onSubmit,
+  onBack,
+  config
 }) {
   const [showPassword, setShowPassword] = useState(false)
   const IconComponent = config.icon
@@ -153,55 +150,35 @@ export default function LoginForm({
                 />
               </div>
               
-              {!otpSent ? (
-                <div>
-                  <label htmlFor="password" className="block text-sm font-semibold text-gray-800 mb-2">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="password"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="current-password"
-                      required
-                      className="w-full px-3 py-3 pr-10 border border-gray-300 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    >
-                      {showPassword ? (
-                        <EyeSlashIcon className="h-5 w-5" />
-                      ) : (
-                        <EyeIcon className="h-5 w-5" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <label htmlFor="otp" className="block text-sm font-semibold text-gray-800 mb-2">
-                    Enter OTP
-                  </label>
+              <div>
+                <label htmlFor="password" className="block text-sm font-semibold text-gray-800 mb-2">
+                  Password
+                </label>
+                <div className="relative">
                   <input
-                    id="otp"
-                    name="otp"
-                    type="text"
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
                     required
-                    maxLength="6"
-                    className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm text-center tracking-widest font-mono text-lg"
-                    placeholder="000000"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                    className="w-full px-3 py-3 pr-10 border border-gray-300 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
-                  <p className="text-xs text-gray-600 mt-2 text-center">OTP sent to your email</p>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </button>
                 </div>
-              )}
+              </div>
 
               {error && (
                 <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
@@ -218,12 +195,12 @@ export default function LoginForm({
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-white mr-3"></div>
-                      <span className="text-sm">{otpSent ? 'Verifying...' : 'Sending OTP...'}</span>
+                      <span className="text-sm">Signing in...</span>
                     </>
                   ) : (
                     <>
                       <IconComponent className="h-5 w-5 mr-3" />
-                      <span className="text-sm">{otpSent ? 'Verify OTP' : 'Send OTP'}</span>
+                      <span className="text-sm">Sign In</span>
                       <ArrowRightIcon className="h-4 w-4 ml-3 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}

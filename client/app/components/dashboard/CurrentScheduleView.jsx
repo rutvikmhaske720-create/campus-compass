@@ -41,40 +41,27 @@ export default function CurrentScheduleView({ department, departmentName }) {
   }
 
   const handleDownloadCurrent = () => {
-    if (currentSchedule?.rawExcelData) {
-      try {
-        const base64Data = typeof currentSchedule.rawExcelData === 'string' 
-          ? currentSchedule.rawExcelData 
-          : currentSchedule.rawExcelData?.data
-        
-        if (base64Data) {
-          const binaryString = atob(base64Data)
-          const bytes = new Uint8Array(binaryString.length)
-          for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i)
-          }
-          const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-          const url = window.URL.createObjectURL(blob)
-          const a = document.createElement('a')
-          a.href = url
-          a.download = currentSchedule.filename
-          document.body.appendChild(a)
-          a.click()
-          document.body.removeChild(a)
-          window.URL.revokeObjectURL(url)
-          return
-        }
-      } catch (error) {
-        console.error('Error downloading raw Excel:', error)
+    if (!currentSchedule?.scheduleData) return
+
+    const data = currentSchedule.scheduleData
+    const wb = XLSX.utils.book_new()
+
+    // Overview sheet with all rows
+    const overviewWs = XLSX.utils.json_to_sheet(data)
+    XLSX.utils.book_append_sheet(wb, overviewWs, 'Overview')
+
+    // Per-batch sheets
+    const batches = [...new Set(data.map(r => r.Batch || r.batch).filter(Boolean))]
+    batches.sort()
+    for (const batch of batches) {
+      const rows = data.filter(r => (r.Batch || r.batch) === batch)
+      if (rows.length > 0) {
+        const ws = XLSX.utils.json_to_sheet(rows)
+        XLSX.utils.book_append_sheet(wb, ws, batch.slice(0, 31))
       }
     }
-    
-    if (currentSchedule?.scheduleData) {
-      const ws = XLSX.utils.json_to_sheet(currentSchedule.scheduleData)
-      const wb = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(wb, ws, 'Schedule')
-      XLSX.writeFile(wb, currentSchedule.filename)
-    }
+
+    XLSX.writeFile(wb, currentSchedule.filename || 'schedule.xlsx')
   }
 
   if (loading) {

@@ -80,50 +80,77 @@ export async function PUT(request) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
     }
 
+    const body = await request.json()
+    console.log('[PUT update-department] body:', body, 'admin:', session.user.email)
+
+    const name = body.name?.trim()
+    const code = body.code?.trim()
+    const email = body.email?.trim().toLowerCase()
+    const password = body.password
+
+    if (!name || !code || !email || !password) {
+      console.error('[PUT update-department] missing fields', {
+        hasName: !!name, hasCode: !!code, hasEmail: !!email, hasPassword: !!password,
+      })
+      return NextResponse.json(
+        { success: false, message: `Missing required fields: ${[!name && 'name', !code && 'code', !email && 'email', !password && 'password'].filter(Boolean).join(', ')}` },
+        { status: 400 }
+      )
+    }
+
     const client = await clientPromise
     const db = client.db()
-    const { name, code, email, password } = await request.json()
-
-    if (!email || !password) {
-      return NextResponse.json({ success: false, message: 'Email and password are required' }, { status: 400 })
-    }
 
     const university = await db.collection('universities').findOne({ 'admin.email': session.user.email })
     if (!university) {
-      return NextResponse.json({ success: false, message: 'University not found' }, { status: 404 })
+      console.error('[PUT update-department] no university for admin', session.user.email)
+      return NextResponse.json({ success: false, message: `No university found for admin ${session.user.email}` }, { status: 404 })
     }
 
-    // Check if email already exists
-    const existingDept = university.departments?.find(dept => dept.coordinator?.email === email)
-    if (existingDept) {
-      return NextResponse.json({ success: false, message: 'Email already in use' }, { status: 400 })
+    // Check if coordinator email or department name/code already exists on this university
+    const existingDepts = university.departments || []
+    const emailCollision = existingDepts.find(d => d.coordinator?.email?.toLowerCase() === email)
+    if (emailCollision) {
+      console.error('[PUT update-department] email collision', email, 'in', emailCollision.name)
+      return NextResponse.json(
+        { success: false, message: `Coordinator email "${email}" is already assigned to department "${emailCollision.name}"` },
+        { status: 400 }
+      )
+    }
+    const nameCollision = existingDepts.find(d => d.name?.toLowerCase() === name.toLowerCase())
+    if (nameCollision) {
+      return NextResponse.json(
+        { success: false, message: `Department name "${name}" already exists` },
+        { status: 400 }
+      )
     }
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
     await db.collection('universities').updateOne(
       { _id: university._id },
-      { 
-        $push: { 
+      {
+        $push: {
           departments: {
             name,
             code,
-            coordinator: { 
+            coordinator: {
               email,
               passwordHash: hashedPassword,
-              plainPassword: password
+              plainPassword: password,
             },
             stats: { students: 0, faculty: 0, classes: 0 },
             createdAt: new Date(),
-            updatedAt: new Date()
-          }
-        }
+            updatedAt: new Date(),
+          },
+        },
       }
     )
 
+    console.log('[PUT update-department] created', { name, code, email })
     return NextResponse.json({ success: true, credentials: { email, password } })
   } catch (error) {
-    console.error('Error adding department:', error)
-    return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 })
+    console.error('[PUT update-department] error:', error)
+    return NextResponse.json({ success: false, message: error.message || 'Server error' }, { status: 500 })
   }
 }

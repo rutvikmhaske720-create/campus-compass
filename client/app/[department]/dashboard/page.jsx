@@ -17,8 +17,10 @@ import ConfigTimeline from '@/app/components/dashboard/ConfigTimeline'
 import ConfigReview from '@/app/components/dashboard/ConfigReview'
 import VirtualExcelEditor from '@/app/components/dashboard/VirtualExcelEditor'
 import * as XLSX from 'xlsx'
+import toast from 'react-hot-toast'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { DAYS } from '@/lib/constants'
+import { isFYDepartment } from '@/lib/departmentUtils'
 import { getDepartmentTabs, createTabNavigator } from '@/app/components/dashboard/DepartmentSidebarConfig'
 
 export default function CoordinatorDashboard() {
@@ -56,13 +58,13 @@ export default function CoordinatorDashboard() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin')
-    } else if (status === 'authenticated' && session.user.role !== 'coordinator') {
+    } else if (status === 'authenticated' && session.user.role !== 'admin') {
       router.push('/')
     }
   }, [status, session, router])
 
   useEffect(() => {
-    if (session?.user.role === 'coordinator') {
+    if (session?.user.role === 'admin') {
       fetchDepartmentData()
     }
   }, [session])
@@ -236,7 +238,9 @@ export default function CoordinatorDashboard() {
     setUploadProgress(0)
     setProcessingSteps([])
     setAnalytics(null)
-    
+
+    const toastId = toast.loading(`Uploading ${uploadedFile.name}...`)
+
     try {
       // Extract all sheets for editor FIRST with merged cell handling
       const extractAllSheets = () => {
@@ -306,21 +310,26 @@ export default function CoordinatorDashboard() {
           fileName: uploadedFile.name,
           fileData: fileBase64,
           analytics: analyticsData,
-          timeSlots: extractedSlots
-        })
+          timeSlots: extractedSlots,
+        }),
       })
-      
-      const saveData = await saveResponse.json()
-      if (!saveData.success) {
-        throw new Error('Failed to save timetable data')
+
+      const saveData = await saveResponse.json().catch(() => ({}))
+
+      if (!saveResponse.ok || !saveData.success) {
+        const msg = saveData?.error || saveData?.message || `HTTP ${saveResponse.status}`
+        throw new Error(msg)
       }
-      
+
       setAnalytics(analyticsData)
       setTimeSlots(extractedSlots)
       setUploadedFile(uploadedFile)
-      setUploading(false)
+      toast.success(`Uploaded & saved: ${uploadedFile.name}`, { id: toastId })
     } catch (error) {
+      console.error('Upload error:', error)
       setConsoleOutput(`Error: ${error.message}`)
+      toast.error(`Upload failed: ${error.message}`, { id: toastId })
+    } finally {
       setUploading(false)
     }
   }
@@ -366,8 +375,7 @@ export default function CoordinatorDashboard() {
   }
 
   const handleGenerateTimetable = () => {
-    const deptClean = departmentName.toUpperCase().replace(/\./g, '').replace(/\s+/g, '').replace(/-/g, '').replace(/_/g, '')
-    const isStandard = deptClean !== 'FY'
+    const isStandard = !isFYDepartment(departmentName)
     setIsStandardDept(isStandard)
     setShowConfig(true)
     setConfigStep(1)
@@ -485,8 +493,7 @@ export default function CoordinatorDashboard() {
         facultyAvailability: data
       })
     })
-    const deptUpper = departmentName.toUpperCase().replace(/\./g, '').replace(/\s+/g, '').replace(/-/g, '').replace(/_/g, '')
-    if (deptUpper === 'FY') {
+    if (isFYDepartment(departmentName)) {
       setConfigStep(5)
     } else {
       setConfigStep(3)
@@ -646,40 +653,50 @@ export default function CoordinatorDashboard() {
   }
 
   const handleSelectSchedule = async (scheduleId) => {
+    const scheduleKey = `schedule${scheduleId}`
+    const scheduleData = results?.[scheduleKey]
+
+    if (!scheduleData) {
+      toast.error('Schedule data not found. Please regenerate.')
+      throw new Error('Schedule data not found')
+    }
+
+    // Only persist the parsed rows — NOT the raw base64 Excel (which can be
+    // 5-15MB and blow past body / MongoDB document limits). The schedules page
+    // reconstructs a downloadable Excel from the JSON data when needed.
+    const toastId = toast.loading('Saving & deploying schedule...')
     try {
-      const scheduleKey = `schedule${scheduleId}`
-      const scheduleData = results[scheduleKey]
-      
-      if (!scheduleData) {
-        console.error('Schedule data not found')
-        return
-      }
-
-      // Also get the raw base64 data to preserve all sheets
-      const rawData = rawScheduleData?.[scheduleKey]
-
       const response = await fetch('/api/coordinators/get-department', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           department: departmentName,
           selectedSchedule: {
             scheduleData,
-            rawExcelData: rawData, // Store raw Excel with all sheets
             filename: `schedule_${scheduleId}_${Date.now()}.xlsx`,
-            selectedAt: new Date().toISOString()
-          }
-        })
+            selectedAt: new Date().toISOString(),
+          },
+        }),
       })
 
-      const data = await response.json()
-      if (data.success) {
-        setResults(null)
-        setConsoleOutput('')
-        router.push(`/${departmentName}/schedules`)
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok || !data.success) {
+        const msg = data?.error || data?.message || `HTTP ${response.status}`
+        toast.error(`Deploy failed: ${msg}`, { id: toastId })
+        throw new Error(msg)
       }
+
+      toast.success('Schedule deployed!', { id: toastId })
+      setResults(null)
+      setConsoleOutput('')
+      router.push(`/${departmentName}/schedules`)
     } catch (error) {
+      if (error.message && !error.message.startsWith('HTTP')) {
+        toast.error(`Deploy failed: ${error.message}`, { id: toastId })
+      }
       console.error('Error selecting schedule:', error)
+      throw error
     }
   }
 

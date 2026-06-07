@@ -19,11 +19,6 @@ export async function GET(request) {
     if (session.user.role === 'admin') {
       console.log('Looking for university with admin email:', session.user.email)
       university = await db.collection('universities').findOne({
-        'admin.email': session.user.email
-      })
-    } else if (session.user.role === 'coordinator') {
-      console.log('Looking for university with coordinator email:', session.user.email)
-      university = await db.collection('universities').findOne({
         'departments.coordinator.email': session.user.email
       })
     }
