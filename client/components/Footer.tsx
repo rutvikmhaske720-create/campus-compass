@@ -56,6 +56,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-slate-200">
           {/* Brand Col */}
           <div className="flex flex-col gap-4">
+<<<<<<< HEAD
             <Link href="/" className="flex items-center gap-2">
               <div className="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
                 M
@@ -67,6 +68,22 @@ export default function Footer() {
                 <span className="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">
                   Student Clubs
                 </span>
+=======
+            <Link href="/" className="flex items-center gap-3">
+              <div className="flex items-center">
+                <span className="text-[#0f2a4a] font-display font-black text-2xl tracking-tighter">
+                  MIT
+                </span>
+                <div className="h-6 w-px bg-slate-300 mx-2.5" />
+                <div className="flex flex-col">
+                  <span className="text-[#0f2a4a] font-display font-bold text-[10px] uppercase leading-none tracking-wider">
+                    Academy of
+                  </span>
+                  <span className="text-[#0f2a4a] font-display font-bold text-[10px] uppercase leading-none tracking-wider mt-0.5">
+                    Engineering
+                  </span>
+                </div>
+>>>>>>> 3c66664 (i am coming)
               </div>
             </Link>
             <p className="text-sm text-slate-600 mt-2 leading-relaxed font-medium">
@@ -149,7 +166,11 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/5 border border-purple-500/20 text-purple-700 text-sm font-semibold hover:bg-purple-600 hover:text-white transition-all duration-300"
             >
+<<<<<<< HEAD
               <span>Main Website</span>
+=======
+              {/* <span>Main Website</span> */}
+>>>>>>> 3c66664 (i am coming)
               <ExternalLink className="w-4 h-4" />
             </a>
           </div>

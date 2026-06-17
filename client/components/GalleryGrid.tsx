@@ -1,6 +1,10 @@
 "use client";
 
+<<<<<<< HEAD
 import { useState } from "react";
+=======
+import { useState, useEffect } from "react";
+>>>>>>> 3c66664 (i am coming)
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Eye } from "lucide-react";
 import { GalleryItem } from "@/lib/types";
@@ -11,6 +15,96 @@ interface GalleryGridProps {
   items: GalleryItem[];
 }
 
+<<<<<<< HEAD
+=======
+interface GalleryCardProps {
+  item: GalleryItem;
+  onClick: () => void;
+}
+
+function GalleryCard({ item, onClick }: GalleryCardProps) {
+  const fallbackSVG = generateFallbackSVG(item.title, item.category);
+  const [imgSrc, setImgSrc] = useState(item.image || fallbackSVG);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setImgSrc(item.image || fallbackSVG);
+    setHasError(false);
+  }, [item.image, fallbackSVG]);
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.3 }}
+      onClick={onClick}
+      className="group relative h-64 rounded-2xl overflow-hidden glass-card cursor-pointer"
+    >
+      {/* Image */}
+      <img
+        src={imgSrc}
+        onError={hasError ? undefined : () => {
+          setHasError(true);
+          setImgSrc(fallbackSVG);
+        }}
+        alt={item.title}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"
+      />
+
+      {/* Hover overlay details (Dark gradient overlay for text readability) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+        <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white mb-3 shadow-md">
+          <Eye className="w-4 h-4" />
+        </div>
+        <span className="text-[10px] font-extrabold tracking-wider uppercase text-purple-400 mb-1">
+          {item.category} • {item.club}
+        </span>
+        <h4 className="text-white font-display font-bold text-sm leading-snug line-clamp-2">
+          {item.title}
+        </h4>
+      </div>
+
+      {/* Category indicator on default view */}
+      <div className="absolute bottom-4 left-4 group-hover:opacity-0 transition-opacity duration-300 flex items-center gap-2">
+        <span className={cn(
+          "w-2.5 h-2.5 rounded-full border border-white/80",
+          item.category === "technical" && "bg-cyan-600",
+          item.category === "cultural" && "bg-purple-600",
+          item.category === "recreational" && "bg-emerald-600"
+        )} />
+        <span className="text-[10px] text-slate-800 font-bold bg-white/90 border border-slate-200/80 px-2 py-0.5 rounded backdrop-blur-sm shadow-sm">
+          {item.title.split(" - ")[0]}
+        </span>
+      </div>
+    </motion.div>
+  );
+}
+
+function LightboxImage({ src, fallbackSrc, alt }: { src: string; fallbackSrc: string; alt: string }) {
+  const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setImgSrc(src || fallbackSrc);
+    setHasError(false);
+  }, [src, fallbackSrc]);
+
+  return (
+    <img
+      src={imgSrc}
+      onError={hasError ? undefined : () => {
+        setHasError(true);
+        setImgSrc(fallbackSrc);
+      }}
+      alt={alt}
+      className="max-h-[70vh] w-auto object-contain pointer-events-none"
+    />
+  );
+}
+
+>>>>>>> 3c66664 (i am coming)
 const CATEGORIES = ["all", "technical", "cultural", "recreational"];
 
 export default function GalleryGrid({ items }: GalleryGridProps) {
@@ -32,7 +126,11 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
             className={cn(
               "px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300",
               activeFilter === category
+<<<<<<< HEAD
                 ? "bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-md shadow-purple-500/10"
+=======
+                ? "bg-purple-600 text-white shadow-md shadow-purple-500/10"
+>>>>>>> 3c66664 (i am coming)
                 : "text-slate-600 hover:text-slate-900 hover:bg-black/5"
             )}
           >
@@ -47,6 +145,7 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full"
       >
         <AnimatePresence mode="popLayout">
+<<<<<<< HEAD
           {filteredItems.map((item) => {
             const fallbackSVG = generateFallbackSVG(item.title, item.category);
             return (
@@ -95,6 +194,15 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
               </motion.div>
             );
           })}
+=======
+          {filteredItems.map((item) => (
+            <GalleryCard
+              key={item.id}
+              item={item}
+              onClick={() => setSelectedImage(item)}
+            />
+          ))}
+>>>>>>> 3c66664 (i am coming)
         </AnimatePresence>
       </motion.div>
 
@@ -132,10 +240,17 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
               className="relative max-w-4xl w-full flex flex-col items-center"
             >
               <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl max-h-[70vh] w-full flex items-center justify-center bg-zinc-950">
+<<<<<<< HEAD
                 <img
                   src={generateFallbackSVG(selectedImage.title, selectedImage.category)}
                   alt={selectedImage.title}
                   className="max-h-[70vh] w-auto object-contain pointer-events-none"
+=======
+                <LightboxImage
+                  src={selectedImage.image}
+                  fallbackSrc={generateFallbackSVG(selectedImage.title, selectedImage.category)}
+                  alt={selectedImage.title}
+>>>>>>> 3c66664 (i am coming)
                 />
               </div>
 

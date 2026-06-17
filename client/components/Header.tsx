@@ -40,6 +40,7 @@ export default function Header() {
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
           {/* Logo */}
+<<<<<<< HEAD
           <Link href="/" className="flex items-center gap-2 group">
             <div className="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-105 transition-transform">
               M
@@ -50,6 +51,24 @@ export default function Header() {
               </span>
               <span className="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">
                 Student Clubs
+=======
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="flex items-center">
+              <span className="text-[#0f2a4a] font-display font-black text-2xl tracking-tighter group-hover:scale-105 transition-transform">
+                MIT
+              </span>
+              <div className="h-6 w-px bg-slate-300 mx-2.5" />
+              <div className="flex flex-col">
+                <span className="text-[#0f2a4a] font-display font-bold text-[10px] uppercase leading-none tracking-wider">
+                  Academy of
+                </span>
+                <span className="text-[#0f2a4a] font-display font-bold text-[10px] uppercase leading-none tracking-wider mt-0.5">
+                  Engineering
+                </span>
+              </div>
+              <span className="ml-3 px-2 py-0.5 rounded-md bg-[#0f2a4a]/10 text-[#0f2a4a] font-bold text-[8px] uppercase tracking-widest hidden sm:inline-block">
+                Clubs
+>>>>>>> 3c66664 (i am coming)
               </span>
             </div>
           </Link>
@@ -87,7 +106,11 @@ export default function Header() {
           <div className="hidden lg:flex items-center">
             <Link
               href="/clubs"
+<<<<<<< HEAD
               className="px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+=======
+              className="px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-purple-600 hover:bg-purple-700 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+>>>>>>> 3c66664 (i am coming)
             >
               Explore Clubs
             </Link>
@@ -130,7 +153,11 @@ export default function Header() {
                       className={cn(
                         "flex items-center gap-4 py-2 transition-colors",
                         isActive
+<<<<<<< HEAD
                           ? "text-gradient-purple font-extrabold"
+=======
+                          ? "text-[#0f2a4a] font-extrabold"
+>>>>>>> 3c66664 (i am coming)
                           : "text-slate-600 hover:text-slate-900"
                       )}
                     >

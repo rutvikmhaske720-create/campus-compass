@@ -61,7 +61,11 @@ export default function SectionHeader({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
+<<<<<<< HEAD
           className="max-w-2xl text-sm md:text-base text-gray-400 leading-relaxed font-sans"
+=======
+          className="max-w-2xl text-sm md:text-base text-slate-600 leading-relaxed font-sans"
+>>>>>>> 3c66664 (i am coming)
         >
           {subtitle}
         </motion.p>
