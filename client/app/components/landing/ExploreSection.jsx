@@ -7,6 +7,7 @@ import {
   PhotoIcon,
   UsersIcon,
   AcademicCapIcon,
+  BuildingOffice2Icon,
 } from '@heroicons/react/24/outline'
 
 const items = [
@@ -45,6 +46,13 @@ const items = [
     icon: AcademicCapIcon,
     gradient: 'from-blue-500 to-blue-700',
   },
+  {
+  href: 'https://xyz-wheat-sigma.vercel.app/',
+  label: '3D Campus',
+  description: 'Explore campus in 3D',
+  icon: BuildingOffice2Icon,
+  gradient: 'from-orange-500 to-orange-700',
+},
 ]
 
 export default function ExploreSection() {
