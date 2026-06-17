@@ -1,9 +1,6 @@
 "use client";
 
-<<<<<<< HEAD
-=======
 import { useState, useEffect } from "react";
->>>>>>> 3c66664 (i am coming)
 import { motion } from "framer-motion";
 import { Calendar, Tag, ChevronRight } from "lucide-react";
 import { Event } from "@/lib/types";
@@ -18,8 +15,6 @@ interface EventCardProps {
 
 export default function EventCard({ event, index }: EventCardProps) {
   const fallbackSVG = generateFallbackSVG(event.title, event.category);
-<<<<<<< HEAD
-=======
   const [imgSrc, setImgSrc] = useState(event.image || fallbackSVG);
   const [hasError, setHasError] = useState(false);
 
@@ -27,7 +22,6 @@ export default function EventCard({ event, index }: EventCardProps) {
     setImgSrc(event.image || fallbackSVG);
     setHasError(false);
   }, [event.image, fallbackSVG]);
->>>>>>> 3c66664 (i am coming)
 
   return (
     <motion.div
@@ -40,15 +34,11 @@ export default function EventCard({ event, index }: EventCardProps) {
       {/* Event Cover Image */}
       <div className="relative w-full md:w-64 h-48 md:h-auto overflow-hidden bg-slate-100 shrink-0">
         <img
-<<<<<<< HEAD
-          src={fallbackSVG}
-=======
           src={imgSrc}
           onError={hasError ? undefined : () => {
             setHasError(true);
             setImgSrc(fallbackSVG);
           }}
->>>>>>> 3c66664 (i am coming)
           alt={event.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"
         />
