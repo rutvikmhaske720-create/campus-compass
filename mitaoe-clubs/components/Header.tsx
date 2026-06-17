@@ -93,7 +93,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center">
             <Link
               href="/clubs"
-              className="px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              className="px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-purple-600 hover:bg-purple-700 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
             >
               Explore Clubs
             </Link>
@@ -136,7 +136,7 @@ export default function Header() {
                       className={cn(
                         "flex items-center gap-4 py-2 transition-colors",
                         isActive
-                          ? "text-gradient-purple font-extrabold"
+                          ? "text-[#0f2a4a] font-extrabold"
                           : "text-slate-600 hover:text-slate-900"
                       )}
                     >

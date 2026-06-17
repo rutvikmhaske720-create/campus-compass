@@ -119,7 +119,7 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
             className={cn(
               "px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300",
               activeFilter === category
-                ? "bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-md shadow-purple-500/10"
+                ? "bg-purple-600 text-white shadow-md shadow-purple-500/10"
                 : "text-slate-600 hover:text-slate-900 hover:bg-black/5"
             )}
           >
