@@ -13,6 +13,7 @@
     "@heroicons/react": "^2.2.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^17.4.2",
+    "framer-motion": "^12.40.0",
     "jspdf": "^3.0.4",
     "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.556.0",
@@ -29,6 +30,8 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/node": "25.9.3",
+    "@types/react": "19.2.17",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "tailwindcss": "^4"
