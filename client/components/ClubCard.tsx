@@ -1,18 +1,11 @@
 "use client";
 
-<<<<<<< HEAD
-=======
 import { useState } from "react";
->>>>>>> 3c66664 (i am coming)
 import Link from "next/link";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
 import { Club } from "@/lib/types";
-<<<<<<< HEAD
-import { getFallbackGradient, generateFallbackSVG } from "@/lib/imageMap";
-=======
 import { getFallbackGradient, generateFallbackSVG, getClubImage } from "@/lib/imageMap";
->>>>>>> 3c66664 (i am coming)
 import { cn } from "@/lib/utils";
 
 interface ClubCardProps {
@@ -35,15 +28,12 @@ function ClubIcon({ iconName, className }: { iconName: string; className?: strin
 export default function ClubCard({ club, index }: ClubCardProps) {
   const gradientClass = getFallbackGradient(club.category);
   const fallbackSVG = generateFallbackSVG(club.name, club.category);
-<<<<<<< HEAD
-=======
   
   // Use state to handle loading real images with fallback support
   const [imgSrc, setImgSrc] = useState(() => {
     return getClubImage(club.id) || fallbackSVG;
   });
   const [hasError, setHasError] = useState(false);
->>>>>>> 3c66664 (i am coming)
 
   return (
     <motion.div
@@ -57,26 +47,13 @@ export default function ClubCard({ club, index }: ClubCardProps) {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-purple-500/5 pointer-events-none" />
 
       {/* Cover Image with gradient overlay */}
-<<<<<<< HEAD
-      <div className="relative h-48 w-full overflow-hidden bg-slate-100 shrink-0">
-        <div className={cn(
-          "absolute inset-0 bg-gradient-to-tr opacity-35 group-hover:scale-110 transition-transform duration-700",
-=======
       <div className="relative h-48 w-full overflow-hidden bg-white shrink-0 p-6 flex items-center justify-center border-b border-slate-100">
         <div className={cn(
           "absolute inset-0 bg-gradient-to-tr opacity-25 group-hover:scale-105 transition-transform duration-700",
->>>>>>> 3c66664 (i am coming)
           gradientClass
         )} />
         {/* Render fallback SVG */}
         <img
-<<<<<<< HEAD
-          src={fallbackSVG}
-          alt={club.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
-=======
           src={imgSrc}
           onError={hasError ? undefined : () => {
             setHasError(true);
@@ -85,7 +62,6 @@ export default function ClubCard({ club, index }: ClubCardProps) {
           alt={club.name}
           className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500 pointer-events-none relative z-10"
         />
->>>>>>> 3c66664 (i am coming)
 
         {/* Category Badge */}
         <span className="absolute top-4 left-4 px-3 py-1 text-[10px] font-extrabold tracking-wider uppercase rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-slate-800 flex items-center gap-1.5 shadow-sm">
