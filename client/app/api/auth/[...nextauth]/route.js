@@ -17,8 +17,13 @@ export const authOptions = {
             return null
           }
 
+          console.log("LOGIN EMAIL:", credentials.email)
+
           const client = await clientPromise
+          console.log("Mongo Connected")
+
           const db = client.db()
+          console.log("Database:", db.databaseName)
 
           // 1. Check admin (previously "department coordinator")
           const universityWithAdmin = await db.collection('universities').findOne({
@@ -46,14 +51,26 @@ export const authOptions = {
             email: credentials.email
           })
 
-          if (teacher && await bcrypt.compare(credentials.password, teacher.passwordHash)) {
-            return {
-              id: teacher._id.toString(),
-              email: credentials.email,
-              role: 'teacher',
-              name: teacher.name,
-              department: teacher.department,
-              university: teacher.university
+
+          console.log("Teacher Found:", teacher)
+
+          if (teacher) {
+            const match = await bcrypt.compare(
+              credentials.password,
+              teacher.passwordHash
+            )
+
+            console.log("Password Match:", match)
+
+            if (match) {
+              return {
+                id: teacher._id.toString(),
+                email: teacher.email,
+                role: 'teacher',
+                name: teacher.name,
+                department: teacher.department,
+                university: teacher.university
+              }
             }
           }
 
@@ -76,6 +93,8 @@ export const authOptions = {
           return null
         } catch (error) {
           console.error('NextAuth authorize error:', error)
+          console.error('FULL AUTH ERROR:')
+          console.error(error)
           return null
         }
       }

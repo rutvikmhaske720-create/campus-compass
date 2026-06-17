@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcryptjs');
 
-const MONGODB_URI = 'mongodb+srv://14jayeshjadhav_db_user:XJoq7skdk5qzBY5X@cluster0.7pyh7yd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = 'mongodb+srv://harshinibhandary21_db_user:newpassword123@cluster0.ktito3f.mongodb.net/campus_compass_tt?retryWrites=true&w=majority&appName=Cluster0';
 
 async function updateCoordinatorPasswords() {
   const client = new MongoClient(MONGODB_URI);
