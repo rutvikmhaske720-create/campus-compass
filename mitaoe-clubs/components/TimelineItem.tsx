@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Trophy, Calendar, User, Star } from "lucide-react";
+import { Trophy, Calendar, User } from "lucide-react";
 import { Achievement } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -21,33 +21,36 @@ export default function TimelineItem({ item, index }: TimelineItemProps) {
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.4, delay: 0.1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.3, delay: 0.05 }}
           className={cn(
-            "absolute top-6 w-5 h-5 rounded-full border-4 border-[#f6f8fc] z-10 shadow-md flex items-center justify-center transition-colors duration-300",
-            item.category === "technical" && "bg-cyan-500 group-hover:bg-cyan-400",
-            item.category === "cultural" && "bg-purple-500 group-hover:bg-purple-400",
-            item.category === "recreational" && "bg-emerald-500 group-hover:bg-emerald-400"
+            "absolute top-6 w-5 h-5 rounded-full border-4 border-[#f6f8fc] z-10 shadow-md flex items-center justify-center",
+            item.category === "technical" && "bg-cyan-500",
+            item.category === "cultural" && "bg-purple-500",
+            item.category === "recreational" && "bg-emerald-500"
           )}
         />
       </div>
 
-      {/* Left Column (empty or text) */}
+      {/* Left Column — visible only on desktop for even-indexed items */}
       <div className={cn(
         "hidden md:flex flex-col justify-start w-1/2 pr-12 text-right",
         isEven ? "opacity-100" : "opacity-0 pointer-events-none"
       )}>
-        {isEven && <TimelineContent item={item} isEven={isEven} />}
+        {isEven && <TimelineContent item={item} isEven={true} />}
       </div>
 
-      {/* Right Column (empty or text) */}
+      {/* Right Column — always visible on mobile, visible for odd items on desktop */}
       <div className={cn(
         "flex flex-col justify-start w-full md:w-1/2 pl-10 md:pl-12 text-left",
         !isEven ? "opacity-100" : "md:opacity-0 md:pointer-events-none"
       )}>
-        {(!isEven || typeof window !== 'undefined' && window.innerWidth < 768) && (
+        {/* On mobile: show for even items (since left column is hidden). On desktop: show for odd items */}
+        <div className={cn(
+          isEven ? "block md:hidden" : "block"
+        )}>
           <TimelineContent item={item} isEven={false} />
-        )}
+        </div>
       </div>
     </div>
   );
@@ -56,10 +59,10 @@ export default function TimelineItem({ item, index }: TimelineItemProps) {
 function TimelineContent({ item, isEven }: { item: Achievement; isEven: boolean }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: isEven ? -30 : 30 }}
+      initial={{ opacity: 0, x: isEven ? -20 : 20 }}
       whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.5 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className="glass-card p-6 md:p-8 rounded-2xl border border-slate-200 relative"
     >
       {/* Glow border element */}
@@ -102,3 +105,4 @@ function TimelineContent({ item, isEven }: { item: Achievement; isEven: boolean 
     </motion.div>
   );
 }
+
