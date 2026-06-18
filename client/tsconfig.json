@@ -32,7 +32,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "components/FacultyCard.jsx"  ],
   "exclude": [
     "node_modules"
   ]

@@ -1,10 +1,12 @@
 import facultyData from "@/data/faculty.json";
-import { Mail, Building2, MapPin, Briefcase } from "lucide-react";
+import { Mail,User,GraduationCap, Building2, Phone, MapPin, Briefcase,FlaskConical } from "lucide-react";
 import { notFound } from "next/navigation";
 
-export default function FacultyInfoPage({ params }) {
+export default async function FacultyInfoPage({ params }) {
+  const { id } = await params;
+
   const faculty = facultyData.find(
-    (item) => String(item.id) === params.id
+    (item) => String(item.id) === String(id)
   );
 
   if (!faculty) {
@@ -53,7 +55,14 @@ export default function FacultyInfoPage({ params }) {
 
               <p>{faculty.email}</p>
             </div>
+             <div className="bg-slate-50 rounded-2xl p-5">
+  <div className="flex items-center gap-3 mb-2">
+    <Phone className="w-5 h-5 text-blue-900" />
+    <h3 className="font-semibold">Contact Number</h3>
+  </div>
 
+  <p>{faculty.contact_no}</p>
+</div>
             <div className="bg-slate-50 rounded-2xl p-5">
               <div className="flex items-center gap-3 mb-3">
                 <MapPin className="text-blue-900" />
@@ -82,19 +91,57 @@ export default function FacultyInfoPage({ params }) {
             </div>
           </div>
 
+   </div>
+          <div className="bg-slate-50 rounded-2xl p-5">
+  <div className="flex items-center gap-3 mb-3">
+    <GraduationCap className="text-blue-900" />
+    <span className="font-semibold">Qualification</span>
+  </div>
+
+  <p>{faculty.qualification}</p>
+</div>
+
           {/* About */}
           <div className="px-8 pb-8">
             <div className="bg-slate-50 rounded-2xl p-6">
-              <h2 className="text-xl font-bold mb-4">
-                About Faculty
-              </h2>
+                <User className="w-6 h-6 text-blue-900" />
+  <h2 className="text-xl font-bold">
+    About Faculty
+  </h2>
 
               <p className="text-slate-600 leading-relaxed">
-                {faculty.bio}
+                {faculty.overview}
               </p>
             </div>
-          </div>
+          {/* </div>
+           <div className="bg-slate-50 rounded-2xl p-5">
+  <div className="flex items-center gap-3 mb-3">
+    <Building2 className="text-blue-900" />
+    <span className="font-semibold">Qualification</span>
+  </div>
 
+  <p>{faculty.qualification}</p>
+</div> */}
+
+<div className="px-8 pb-8">
+  <div className="bg-slate-50 rounded-2xl p-6">
+    <FlaskConical className="w-6 h-6 text-blue-900" />
+  <h2 className="text-xl font-bold">
+    Research Areas
+  </h2>
+
+    <div className="flex flex-wrap gap-2">
+      {faculty.research_areas?.map((area, index) => (
+        <span
+          key={index}
+          className="px-3 py-1 rounded-full bg-blue-100 text-blue-900"
+        >
+          {area}
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail, GraduationCap, Building2, ArrowRight } from "lucide-react";
+import { Mail, GraduationCap, Phone, Building2, ArrowRight } from "lucide-react";
 
 export default function FacultyCard({ faculty, index }) {
   return (
@@ -21,11 +21,11 @@ export default function FacultyCard({ faculty, index }) {
         <img
           src={faculty.image}
           alt={faculty.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-contain object-center bg-white p-2 group-hover:scale-105 transition-transform duration-500"
         />
 
         {/* Department Badge */}
-        <span className="absolute top-4 left-4 px-3 py-1 text-[10px] font-extrabold tracking-wider uppercase rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-slate-800 shadow-sm">
+        <span className="absolute bottom-2 left-2 px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-slate-800 shadow-sm">
           {faculty.department}
         </span>
       </div>
@@ -49,9 +49,9 @@ export default function FacultyCard({ faculty, index }) {
             </div>
           </div>
 
-          <p className="text-sm text-slate-600 leading-relaxed mb-5">
+          {/* <p className="text-sm text-slate-600 leading-relaxed mb-5">
             {faculty.bio}
-          </p>
+          </p> */}
 
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2 text-slate-600">
@@ -59,10 +59,15 @@ export default function FacultyCard({ faculty, index }) {
               {faculty.department}
             </div>
 
-            <div className="flex items-center gap-2 text-slate-600">
+            {/* <div className="flex items-center gap-2 text-slate-600">
               <Mail className="w-4 h-4 text-blue-900" />
               {faculty.email}
-            </div>
+            </div> */}
+
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+  <Phone className="w-4 h-4" />
+  {faculty.contact_no || "N/A"}
+</div>
           </div>
         </div>
 
@@ -73,7 +78,7 @@ export default function FacultyCard({ faculty, index }) {
           </span>
 
           <Link
-            href={`/faculty/${faculty.id}`}
+             href={`/student/facultyinfo/${faculty.id}`}
             className="text-blue-900 font-bold flex items-center gap-1 hover:text-blue-700 transition-colors"
           >
             View Profile
