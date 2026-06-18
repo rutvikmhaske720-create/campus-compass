@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { label: "Events", href: "/events", icon: Calendar },
   { label: "Gallery", href: "/gallery", icon: Image },
   { label: "Achievements", href: "/achievements", icon: Trophy },
-  { label: "Team", href: "/team", icon: Users },
+  // { label: "Team", href: "/team", icon: Users },
   { label: "Contact", href: "/contact", icon: Phone },
 ];
 
@@ -55,7 +55,7 @@ export default function Header() {
                 </span>
               </div>
               <span className="ml-3 px-2 py-0.5 rounded-md bg-[#0f2a4a]/10 text-[#0f2a4a] font-bold text-[8px] uppercase tracking-widest hidden sm:inline-block">
-                Clubs
+                Stdent Portal
               </span>
             </div>
           </Link>
@@ -71,7 +71,7 @@ export default function Header() {
                   className={cn(
                     "relative px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2",
                     isActive
-                      ? "text-purple-600"
+                      ? "text-blue-900"
                       : "text-slate-600 hover:text-slate-900 hover:bg-black/5"
                   )}
                 >
@@ -80,7 +80,7 @@ export default function Header() {
                   {isActive && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute inset-0 bg-purple-500/10 border border-purple-500/20 rounded-full -z-10"
+                    className="absolute inset-0 bg-blue-900/10 border border-blue-900/20 rounded-full -z-10"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -91,12 +91,45 @@ export default function Header() {
 
           {/* CTA Link */}
           <div className="hidden lg:flex items-center">
+
             <Link
+  href="/auth/signin"
+   className="
+    px-5 py-2.5
+    rounded-xl
+    text-sm font-semibold
+    text-white
+
+    bg-gradient-to-r
+    from-blue-900/90
+    via-blue-800/85
+    to-blue-900/90
+
+    backdrop-blur-lg
+    border border-blue-300/20
+
+    shadow-lg
+    shadow-blue-900/40
+
+    hover:from-blue-800
+    hover:via-blue-700
+    hover:to-blue-800
+
+    hover:shadow-xl
+    hover:shadow-blue-700/40
+    hover:scale-105
+
+    transition-all duration-300
+  "
+>
+  Sign In
+</Link>
+            {/* <Link
               href="/clubs"
               className="px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-purple-600 hover:bg-purple-700 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
             >
               Explore Clubs
-            </Link>
+            </Link> */}
           </div>
 
           {/* Mobile Menu Button */}

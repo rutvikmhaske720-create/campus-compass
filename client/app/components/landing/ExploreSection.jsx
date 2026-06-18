@@ -32,13 +32,13 @@ const items = [
     icon: PhotoIcon,
     gradient: 'from-pink-500 to-pink-700',
   },
-  {
-    href: '/team',
-    label: 'Team',
-    description: 'Meet our coordinators',
-    icon: UsersIcon,
-    gradient: 'from-teal-500 to-teal-700',
-  },
+  // {
+  //   href: '/team',
+  //   label: 'Team',
+  //   description: 'Meet our coordinators',
+  //   icon: UsersIcon,
+  //   gradient: 'from-teal-500 to-teal-700',
+  // },
   {
     href: '/student/dashboard',
     label: 'Student',

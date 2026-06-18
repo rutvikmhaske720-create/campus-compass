@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. A. B. Patil",
+    "designation": "Professor & Head",
+    "department": "Computer Engineering",
+    "email": "abpatil@mitaoe.ac.in",
+    "cabin": "A-302",
+    "experience": "15 Years",
+    "image": "/faculty/abpatil.jpg"
+  }
+]

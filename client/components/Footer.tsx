@@ -109,9 +109,9 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-600 hover:text-purple-600 font-medium transition-colors flex items-center gap-1 group"
+                    className="text-sm text-slate-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1 group"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.label}
                   </Link>
                 </li>
@@ -124,15 +124,15 @@ export default function Footer() {
             <h3 className="text-slate-900 font-display font-bold text-base mb-6">Contact Us</h3>
             <ul className="flex flex-col gap-4">
               <li className="flex gap-3 text-sm text-slate-600 font-medium leading-relaxed">
-                <MapPin className="w-5 h-5 text-purple-600 shrink-0 mt-0.5" />
+                <MapPin className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                 <span>{contactData.address}</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                <Phone className="w-4 h-4 text-purple-600 shrink-0" />
+                <Phone className="w-4 h-4 text-blue-600 shrink-0" />
                 <span>{contactData.phones[0]}</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                <Mail className="w-4 h-4 text-purple-600 shrink-0" />
+                <Mail className="w-4 h-4 text-blue-600 shrink-0" />
                 <a href={`mailto:${contactData.email}`} className="hover:text-purple-600 transition-colors">
                   {contactData.email}
                 </a>
@@ -150,7 +150,7 @@ export default function Footer() {
               href={contactData.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/5 border border-purple-500/20 text-purple-700 text-sm font-semibold hover:bg-purple-600 hover:text-white transition-all duration-300"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500/5 border border-blue-500/20 text-blue-700 text-sm font-semibold hover:bg-blue-600 hover:text-white transition-all duration-300"
             >
               {/* <span>Main Website</span> */}
               <ExternalLink className="w-4 h-4" />
