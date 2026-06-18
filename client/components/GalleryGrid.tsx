@@ -49,10 +49,10 @@ function GalleryCard({ item, onClick }: GalleryCardProps) {
 
       {/* Hover overlay details (Dark gradient overlay for text readability) */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
-        <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white mb-3 shadow-md">
+        <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white mb-3 shadow-md">
           <Eye className="w-4 h-4" />
         </div>
-        <span className="text-[10px] font-extrabold tracking-wider uppercase text-purple-400 mb-1">
+        <span className="text-[10px] font-extrabold tracking-wider uppercase text-blue-400 mb-1">
           {item.category} • {item.club}
         </span>
         <h4 className="text-white font-display font-bold text-sm leading-snug line-clamp-2">
@@ -119,7 +119,7 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
             className={cn(
               "px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300",
               activeFilter === category
-                ? "bg-purple-600 text-white shadow-md shadow-purple-500/10"
+                ? "bg-blue-600 text-white shadow-md shadow-blue-500/10"
                 : "text-slate-600 hover:text-slate-900 hover:bg-black/5"
             )}
           >

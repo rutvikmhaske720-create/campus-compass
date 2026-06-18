@@ -16,8 +16,8 @@ export default function StudentDashboard() {
       icon: Calendar,
     },
     {
-      title: "Study Resources",
-      description: "Access notes, materials and learning resources.",
+      title: "Timetable",
+      description: "View your class schedule and important time-bound information.",
       href: "#",
       icon: BookOpen,
     },

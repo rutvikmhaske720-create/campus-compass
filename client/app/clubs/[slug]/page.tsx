@@ -47,7 +47,7 @@ export default async function ClubDetailPage({ params }: PageProps) {
       {/* Header Banner */}
       <div className="relative rounded-3xl overflow-hidden glass-card border border-slate-200 p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center justify-between">
         {/* Glow behind */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-50/5 rounded-bl-full filter blur-xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50/5 rounded-bl-full filter blur-xl pointer-events-none" />
 
         <div className="flex flex-col md:flex-row items-center gap-8 w-full md:w-auto">
           {/* Mapped SVG Fallback illustration */}
@@ -61,7 +61,7 @@ export default async function ClubDetailPage({ params }: PageProps) {
           </div>
 
           <div className="text-center md:text-left">
-            <span className="px-3 py-1 text-[10px] font-extrabold tracking-widest uppercase rounded-full bg-purple-50 border border-purple-200 text-purple-700 mb-4 inline-block">
+            <span className="px-3 py-1 text-[10px] font-extrabold tracking-widest uppercase rounded-full bg-blue-50 border border-blue-200 text-blue-700 mb-4 inline-block">
               {club.category} Society
             </span>
             <h1 className="text-3xl md:text-5xl font-display font-extrabold text-slate-900 tracking-tight mb-2">
@@ -93,7 +93,7 @@ export default async function ClubDetailPage({ params }: PageProps) {
           {/* About description */}
           <div className="glass-card p-8 rounded-2xl border border-slate-200">
             <h2 className="text-2xl font-display font-bold text-slate-900 mb-6 flex items-center gap-2.5">
-              <BookOpen className="w-5 h-5 text-purple-600" />
+              <BookOpen className="w-5 h-5 text-slate-600" />
               About Club
             </h2>
             <div className="text-sm md:text-base text-slate-700 font-medium leading-relaxed space-y-4 whitespace-pre-line">
@@ -147,15 +147,15 @@ export default async function ClubDetailPage({ params }: PageProps) {
           {/* Leadership Module */}
           <div className="glass-card p-8 rounded-2xl border border-slate-200 flex flex-col gap-6">
             <h2 className="text-xl font-display font-bold text-slate-900 flex items-center gap-2.5">
-              <Award className="w-5 h-5 text-purple-600" />
+              <Award className="w-5 h-5 text-blue-600" />
               Club Leadership
             </h2>
 
             {/* Faculty Advisor */}
             {club.facultyAdvisor && club.facultyAdvisor.name && (
               <div className="p-5 rounded-xl bg-slate-50 border border-slate-200">
-                <div className="flex items-center gap-2 text-[10px] font-extrabold tracking-widest text-purple-600 uppercase mb-2">
-                  <Star className="w-3.5 h-3.5 fill-purple-600/10" />
+                <div className="flex items-center gap-2 text-[10px] font-extrabold tracking-widest text-blu-600 uppercase mb-2">
+                  <Star className="w-3.5 h-3.5 fill-blue-600/10" />
                   Faculty Advisor
                 </div>
                 <h3 className="text-slate-900 font-display font-bold text-base">{club.facultyAdvisor.name}</h3>
@@ -209,7 +209,7 @@ export default async function ClubDetailPage({ params }: PageProps) {
           {/* Club Specific Events */}
           <div className="glass-card p-8 rounded-2xl border border-slate-200">
             <h2 className="text-xl font-display font-bold text-slate-900 mb-6 flex items-center gap-2.5">
-              <Calendar className="w-5 h-5 text-purple-600" />
+              <Calendar className="w-5 h-5 text-blue-600" />
               Club Events
             </h2>
 
@@ -218,7 +218,7 @@ export default async function ClubDetailPage({ params }: PageProps) {
                 {clubEvents.map((evt) => (
                   <div key={evt.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200 relative group">
                     <span className={`absolute top-4 right-4 px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${
-                      evt.status === "upcoming" ? "bg-purple-50 text-purple-700 border border-purple-200" : "bg-slate-100 text-slate-500 border border-slate-200"
+                      evt.status === "upcoming" ? "bg-black-50 text-black-700 border border-purple-200" : "bg-slate-100 text-slate-500 border border-slate-200"
                     }`}>
                       {evt.status}
                     </span>

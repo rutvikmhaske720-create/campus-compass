@@ -36,7 +36,7 @@ export default function ClubsPage() {
         badge="MITAOE Clubs"
         title="Student-Led Communities"
         subtitle="Explore our 25 student clubs across technical, cultural, and recreational domains. Join a community, learn new skills, and shape your campus experience."
-        theme="purple"
+        theme="blue"
       />
 
       {/* Filter and Search Bar */}
@@ -49,7 +49,7 @@ export default function ClubsPage() {
             placeholder="Search by name, tags, description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-11 pr-10 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-purple-600 transition-colors"
+            className="w-full pl-11 pr-10 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-blue-600 transition-colors"
           />
           {searchTerm && (
             <button
@@ -70,7 +70,7 @@ export default function ClubsPage() {
               onClick={() => setActiveCategory(category)}
               className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
                 activeCategory === category
-                  ? "bg-purple-600 text-white shadow-md shadow-purple-500/10"
+                  ? "bg-slate-600 text-white shadow-md shadow-slate-500/10"
                   : "text-slate-600 hover:text-slate-900 hover:bg-black/5"
               }`}
             >

@@ -9,7 +9,7 @@ interface SectionHeaderProps {
   subtitle?: string;
   align?: "left" | "center";
   className?: string;
-  theme?: "purple" | "cyan" | "multicolor";
+  theme?: "blue" | "cyan" | "multicolor";
 }
 
 export default function SectionHeader({
@@ -18,7 +18,7 @@ export default function SectionHeader({
   subtitle,
   align = "center",
   className,
-  theme = "purple",
+  theme = "blue",
 }: SectionHeaderProps) {
   return (
     <div
@@ -34,7 +34,7 @@ export default function SectionHeader({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="px-3.5 py-1 text-[10px] font-extrabold tracking-widest uppercase rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 mb-4"
+          className="px-3.5 py-1 text-[10px] font-extrabold tracking-widest uppercase rounded-full bg-blue-500/10 border border-slate-500/20 text-black-300 mb-4"
         >
           {badge}
         </motion.span>
@@ -47,7 +47,7 @@ export default function SectionHeader({
         transition={{ duration: 0.5, delay: 0.1 }}
         className={cn(
           "font-display font-extrabold text-3xl md:text-5xl tracking-tight mb-4",
-          theme === "purple" && "text-gradient-purple",
+          theme === "blue" && "text-gradient-blue",
           theme === "cyan" && "text-gradient-cyan",
           theme === "multicolor" && "text-gradient-multicolor"
         )}

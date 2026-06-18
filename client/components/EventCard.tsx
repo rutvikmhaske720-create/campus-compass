@@ -48,12 +48,12 @@ export default function EventCard({ event, index }: EventCardProps) {
         <span className={cn(
           "absolute top-4 left-4 px-3 py-1 text-[10px] font-extrabold tracking-wider uppercase rounded-full border flex items-center gap-1.5 shadow-sm",
           event.status === "upcoming" 
-            ? "bg-purple-50 border-purple-200 text-purple-700" 
+            ? "bg-blue-50 border-blue-200 text-blue-700" 
             : "bg-slate-100 border-slate-200 text-slate-600"
         )}>
           <span className={cn(
             "w-1.5 h-1.5 rounded-full",
-            event.status === "upcoming" ? "bg-purple-600 animate-pulse" : "bg-slate-400"
+            event.status === "upcoming" ? "bg-slate-600 animate-pulse" : "bg-slate-400"
           )} />
           {event.status}
         </span>
@@ -65,7 +65,7 @@ export default function EventCard({ event, index }: EventCardProps) {
           {/* Metadata line */}
           <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-slate-500 font-semibold mb-3">
             <span className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-purple-600" />
+              <Calendar className="w-3.5 h-3.5 text-blue-600" />
               {formatDate(event.date)}
             </span>
             <span className="flex items-center gap-1.5">
@@ -74,7 +74,7 @@ export default function EventCard({ event, index }: EventCardProps) {
             </span>
           </div>
 
-          <h3 className="text-slate-900 font-display font-bold text-xl mb-3 group-hover:text-purple-600 transition-colors">
+          <h3 className="text-slate-900 font-display font-bold text-xl mb-3 group-hover:text-blue-600 transition-colors">
             {event.title}
           </h3>
 
@@ -88,7 +88,7 @@ export default function EventCard({ event, index }: EventCardProps) {
           <span className="text-[10px] font-extrabold tracking-wider uppercase text-slate-500">
             Category: {event.category}
           </span>
-          <span className="text-purple-600 text-xs font-bold flex items-center gap-1 group-hover:text-purple-700">
+          <span className="text-blue-600 text-xs font-bold flex items-center gap-1 group-hover:text-blue-700">
             Read Event Details
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </span>

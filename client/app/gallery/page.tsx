@@ -13,7 +13,7 @@ export default function GalleryPage() {
         badge="Moments Gallery"
         title="Capturing Campus Life"
         subtitle="Step into the vibrant snapshots of student actions. Glimpses of art exhibitions, technical racing builds, live music jam sessions, and local hackathons."
-        theme="multicolor"
+        theme="blue"
       />
 
       {/* Interactive Photo Grid */}

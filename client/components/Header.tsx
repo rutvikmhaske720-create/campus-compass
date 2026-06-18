@@ -173,7 +173,7 @@ export default function Header() {
                           : "text-slate-600 hover:text-slate-900"
                       )}
                     >
-                      <item.icon className="w-6 h-6 text-purple-600" />
+                      <item.icon className="w-6 h-6 text-slate-600" />
                       {item.label}
                     </Link>
                   </motion.div>
